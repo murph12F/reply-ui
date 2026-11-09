@@ -158,6 +158,7 @@ test('a reply with TLDR and Pick is drawn as a card and badges', async ($, on) =
   expect(await ui.find({ type: 'Text', text: /^ a $/ })).toBeTruthy()
   expect(await ui.find({ type: 'Text', text: /★ recommended/ })).toBeTruthy()
   expect(await ui.find({ type: 'Text', text: /= ae \(all recommended\)/ })).toBeTruthy()
+  expect(await ui.find({ type: 'Text', text: /= explain more/ })).toBeTruthy()
   expect(await ui.find({ type: 'Text', text: /^engine$/ })).toBeFalsy()
   await ui.unmount()
 })

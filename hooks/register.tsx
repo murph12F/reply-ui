@@ -122,6 +122,7 @@ export const register: Register = on => {
           <Text dimColor>
             {'Reply with keys'}
             {rec.length ? <Text>{'  ·  '}<Text color={ACCENT} bold>.</Text>{` = ${rec.join('')} (all recommended)`}</Text> : null}
+            {'  ·  '}<Text color={ACCENT} bold>?</Text>{' = explain more'}
           </Text>
         </Box>
       )

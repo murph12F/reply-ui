@@ -95,7 +95,7 @@ export const register: Register = on => {
     )
 
     // Pick: key badges, a recommended tag, the explanation dim beneath.
-    const pick = (decisions: PickDecision[]) => {
+    const pick = (decisions: PickDecision[], allKey: string, moreKey: string) => {
       const rec = decisions.flatMap(d => d.options.filter(o => o.recommended).slice(0, 1).map(o => o.key))
       return (
         <Box flexDirection="column" marginY={1} paddingX={1} paddingY={1} backgroundColor={TABLE_BG} rowGap={1}>
@@ -121,8 +121,8 @@ export const register: Register = on => {
           ))}
           <Text dimColor>
             {'Reply with keys'}
-            {rec.length ? <Text>{'  ·  '}<Text color={ACCENT} bold>.</Text>{` = ${rec.join('')} (all recommended)`}</Text> : null}
-            {'  ·  '}<Text color={ACCENT} bold>?</Text>{' = explain more'}
+            {rec.length && allKey ? <Text>{'  ·  '}<Text color={ACCENT} bold>{allKey}</Text>{` = ${rec.join('')} (all recommended)`}</Text> : null}
+            {moreKey ? <Text>{'  ·  '}<Text color={ACCENT} bold>{moreKey}</Text>{' = explain more'}</Text> : null}
           </Text>
         </Box>
       )
@@ -138,7 +138,7 @@ export const register: Register = on => {
             s.kind === 'md' ? <Markdown text={s.text} />
             : s.kind === 'table' ? table(s.header, s.rows)
             : s.kind === 'tldr' ? tldr(s.text)
-            : pick(s.decisions),
+            : pick(s.decisions, s.allKey, s.moreKey),
           )}
         </Box>
       </Box>

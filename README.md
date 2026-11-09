@@ -5,7 +5,7 @@ A Claude Code mod that draws Claude's replies better in the terminal:
 - **Tables** the way Codex draws them: bold yellow header, a `━` rule under it, dim `─` rules between rows, cells that wrap inside their column, `code` colored, on a slightly lighter gray.
 - **Your prompts** on a gray band (Codex's prompt gray), so prompts and answers alternate.
 - **TLDR blocks** as a rounded card with a yellow title.
-- **Pick blocks** (from the [tldr](https://github.com/murph12F/tldr) plugin) as yellow key badges, a green `★ recommended` tag, the explanation dimmed under each option, and a footer saying what `.` picks.
+- **Pick blocks** (from the [tldr](https://github.com/murph12F/tldr) plugin) as yellow key badges, a green `★ recommended` tag, the explanation dimmed under each option, and a footer with your reply keys (read from the block, so keys you changed in tldr show too).
 
 Only the drawing changes: what Claude wrote and what the transcript stores stay the same. Replies with none of these blocks, and every surface but the terminal, are drawn by Claude Code as usual.
 

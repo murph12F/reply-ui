@@ -7,13 +7,23 @@ export type PickDecision = { name: string; options: PickOption[] }
 export type Block =
   | { kind: 'md'; text: string }
   | { kind: 'tldr'; text: string }
-  | { kind: 'pick'; decisions: PickDecision[] }
+  | { kind: 'pick'; decisions: PickDecision[]; allKey: string; moreKey: string }
 
 const TLDR_HEAD = /^\s*\**\s*TLDR\s*:?\s*\**\s*:?\s*$/i
 const PICK_HEAD = /^\s*\**\s*Pick\s*:?\s*\**\s*:?\s*$/i
 const OPTION = /^\s*[-*+]\s*`([a-z0-9])`\s+(\S.*)$/
 const LIST_ITEM = /^\s*([-*+]|\d+\.)\s+/
 const FOOTER = /^\s*reply with keys/i
+
+// The reply keys are the user's (tldr's all_key / more_key): read them from the
+// footer the rules write, "Reply with keys, `.` for all recommended, or `+` to
+// explain more.", so a changed key shows here too. '' when the footer has none.
+export function replyKeys(lines: string[]): { allKey: string; moreKey: string } {
+  const f = lines.find(l => FOOTER.test(l)) ?? ''
+  const all = /`([^`a-z0-9\s])`\s+for all recommended/i.exec(f)
+  const more = /`([^`a-z0-9\s])`\s+to explain more/i.exec(f)
+  return { allKey: all?.[1] ?? '', moreKey: more?.[1] ?? '' }
+}
 
 export function parseOption(key: string, rest: string): PickOption {
   const recommended = /\(recommended\)/i.test(rest)
@@ -63,10 +73,11 @@ export function blocks(text: string): Block[] {
     if (/^\s*(```|~~~)/.test(line)) inFence = !inFence
     if (!inFence && PICK_HEAD.test(line)) {
       // The Pick block runs to the end of the reply, as the rules place it.
-      const decisions = parsePick(lines.slice(i + 1))
+      const rest = lines.slice(i + 1)
+      const decisions = parsePick(rest)
       if (decisions.length) {
         flush()
-        out.push({ kind: 'pick', decisions })
+        out.push({ kind: 'pick', decisions, ...replyKeys(rest) })
         return out
       }
     }

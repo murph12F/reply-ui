@@ -108,7 +108,7 @@ test('the table sits on its own lighter gray', async ($, on) => {
   await ui.unmount()
 })
 
-import { blocks, parseOption } from '../hooks/blocks'
+import { blocks, parseOption, replyKeys } from '../hooks/blocks'
 
 const WITH_PICK = [
   'The answer.',
@@ -127,7 +127,7 @@ const WITH_PICK = [
   '- `e` commit (recommended): public on GitHub',
   '- `u` wait',
   '',
-  'Reply with keys, or `.` for all recommended.',
+  'Reply with keys, `;` for all recommended, or `=` to explain more.',
 ].join('\n')
 
 test('blocks: TLDR and Pick split out, options parsed', () => {
@@ -141,6 +141,12 @@ test('blocks: TLDR and Pick split out, options parsed', () => {
   })
   expect(p.decisions[1]!.options[1]).toEqual({ key: 'u', label: 'wait', info: '', recommended: false })
   expect(parseOption('h', '`a:b` label: info').label).toBe('`a:b` label')
+})
+
+test('replyKeys: the footer names the user\'s keys', () => {
+  expect(replyKeys(['- `a` x', 'Reply with keys, `;` for all recommended, or `=` to explain more.'])).toEqual({ allKey: ';', moreKey: '=' })
+  expect(replyKeys(['Reply with keys, or `.` for all recommended.'])).toEqual({ allKey: '.', moreKey: '' })
+  expect(replyKeys(['- `a` x'])).toEqual({ allKey: '', moreKey: '' })
 })
 
 test('blocks: TLDR or Pick inside a code fence, or prose mentioning them, stay markdown', () => {
@@ -159,6 +165,8 @@ test('a reply with TLDR and Pick is drawn as a card and badges', async ($, on) =
   expect(await ui.find({ type: 'Text', text: /★ recommended/ })).toBeTruthy()
   expect(await ui.find({ type: 'Text', text: /= ae \(all recommended\)/ })).toBeTruthy()
   expect(await ui.find({ type: 'Text', text: /= explain more/ })).toBeTruthy()
+  expect(await ui.find({ type: 'Text', text: /^;$/ })).toBeTruthy()
+  expect(await ui.find({ type: 'Text', text: /^=$/ })).toBeTruthy()
   expect(await ui.find({ type: 'Text', text: /^engine$/ })).toBeFalsy()
   await ui.unmount()
 })

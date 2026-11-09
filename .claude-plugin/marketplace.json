@@ -1,0 +1,11 @@
+{
+  "name": "reply-ui",
+  "owner": { "name": "Iacop Hafiane" },
+  "plugins": [
+    {
+      "name": "reply-ui",
+      "source": "./",
+      "description": "Draws Claude's replies better in the terminal: Codex-style tables, a TLDR card, Pick options as key badges, and a gray band on your prompts"
+    }
+  ]
+}

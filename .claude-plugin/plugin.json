@@ -1,0 +1,5 @@
+{
+  "name": "reply-ui",
+  "version": "0.2.0",
+  "description": "Draws Claude's replies better in the terminal: Codex-style tables, a TLDR card, Pick options as key badges, and a gray band on your prompts"
+}
